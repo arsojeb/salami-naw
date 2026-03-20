@@ -245,7 +245,7 @@
   <body>
     <div class="container">
       <h1>🎁 ঈদ সালামি চাই?</h1>
-      <p class="subtitle">১ থেকে ১০ টাকার মধ্যে ভাগ্য পরীক্ষা করুন!</p>
+      <p class="subtitle">🎉 ঘুরাও চাকা, জিতে নাও সালামি!</p>
 
       <div class="wheel-wrapper">
         <div class="pointer-container">
@@ -275,16 +275,16 @@
 
     <script>
       const segments = [
-        { value: 1, label: "১০০" },
-        { value: 2, label: "২০০" },
-        { value: 3, label: "৩০০" },
-        { value: 4, label: "৪০০" },
-        { value: 5, label: "৫০০" },
-        { value: 6, label: "৬০০" },
-        { value: 7, label: "৭০০" },
-        { value: 8, label: "৮০০" },
-        { value: 9, label: "৯০০" },
-        { value: 10, label: "১০০০" },
+        { value: 100, label: "১০০ টাকা" },
+        { value: 200, label: "২০০ টাকা" },
+        { value: 300, label: "৩০০ টাকা" },
+        { value: 400, label: "৪০০ টাকা" },
+        { value: 500, label: "৫০০ টাকা" },
+        { value: 600, label: "৬০০ টাকা" },
+        { value: 700, label: "৭০০ টাকা" },
+        { value: 800, label: "৮০০ টাকা" },
+        { value: 900, label: "৯০০ টাকা" },
+        { value: 1000, label: "১০০০ টাকা" },
       ];
 
       const colors = [
@@ -383,7 +383,7 @@
         localStorage.setItem("eid_salami_result", winner.label);
 
         resultContent.innerHTML = `
-      <div class="result-label">🎉 অভিনন্দন! আপনি পেয়েছেন</div>
+      <div class="result-label">🤣 ভাগ্য যা দিছে তাই নাও!</div>
       <div class="result-amount">৳ ${winner.label}</div>
     `;
 
