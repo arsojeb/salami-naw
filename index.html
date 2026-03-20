@@ -275,16 +275,16 @@
 
     <script>
       const segments = [
-        { value: 1, label: "১" },
-        { value: 2, label: "২" },
-        { value: 3, label: "৩" },
-        { value: 4, label: "৪" },
-        { value: 5, label: "৫" },
-        { value: 6, label: "৬" },
-        { value: 7, label: "৭" },
-        { value: 8, label: "৮" },
-        { value: 9, label: "৯" },
-        { value: 10, label: "১০" },
+        { value: 1, label: "১০০" },
+        { value: 2, label: "২০০" },
+        { value: 3, label: "৩০০" },
+        { value: 4, label: "৪০০" },
+        { value: 5, label: "৫০০" },
+        { value: 6, label: "৬০০" },
+        { value: 7, label: "৭০০" },
+        { value: 8, label: "৮০০" },
+        { value: 9, label: "৯০০" },
+        { value: 10, label: "১০০০" },
       ];
 
       const colors = [
@@ -384,7 +384,7 @@
 
         resultContent.innerHTML = `
       <div class="result-label">🎉 অভিনন্দন! আপনি পেয়েছেন</div>
-      <div class="result-amount">৳ ${winner.value}</div>
+      <div class="result-amount">৳ ${winner.label}</div>
     `;
 
         resultCard.classList.add("show");
