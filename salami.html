@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eid Salami Spinner 1-10 Taka</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ===== YOUR ORIGINAL CSS (UNCHANGED) ===== */
+
+      :root {
+        --primary: #00b894;
+        --secondary: #0984e3;
+        --accent: #fdcb6e;
+        --dark: #2d3436;
+        --light: #dfe6e9;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Hind Siliguri", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #232526 0%, #414345 100%);
+        overflow: hidden;
+        padding: 20px;
+        position: relative;
+      }
+
+      .container {
+        text-align: center;
+        z-index: 10;
+        max-width: 500px;
+        width: 100%;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        margin-bottom: 10px;
+        animation: fadeInDown 1s ease-out;
+      }
+
+      .subtitle {
+        color: #b2bec3;
+        font-size: 1rem;
+        margin-bottom: 30px;
+        animation: fadeIn 1.5s ease-out;
+      }
+
+      .wheel-wrapper {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: 0 auto 30px;
+        filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.4));
+      }
+
+      .wheel {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+        border: 8px solid #fff;
+        transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+      }
+
+      #wheelCanvas {
+        width: 100%;
+        height: 100%;
+      }
+
+      .pointer-container {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+      }
+
+      .pointer {
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-top: 30px solid #d63031;
+        position: relative;
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.3));
+      }
+
+      .center-circle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+        height: 50px;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: var(--dark);
+      }
+
+      .spin-btn {
+        background: linear-gradient(45deg, #ff7675, #d63031);
+        border: none;
+        padding: 12px 40px;
+        font-size: 1.3rem;
+        font-weight: 700;
+        font-family: "Hind Siliguri", sans-serif;
+        color: white;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(214, 48, 49, 0.4);
+        transition: all 0.3s ease;
+        outline: none;
+      }
+
+      .spin-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(214, 48, 49, 0.5);
+      }
+
+      .spin-btn:disabled {
+        background: #636e72;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .result-card {
+        margin-top: 25px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        min-height: 80px;
+        width: 80%;
+        max-width: 350px;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.5s ease;
+        opacity: 0;
+        transform: scale(0.8);
+      }
+
+      .result-card.show {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .result-amount {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: #00b894;
+        line-height: 1;
+        margin-bottom: 5px;
+      }
+
+      .result-label {
+        font-size: 1rem;
+        color: #636e72;
+      }
+
+      .note {
+        margin-top: 30px;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.8rem;
+        max-width: 350px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* ===== ONLY RESPONSIVE ADDITION (SAFE OVERRIDE) ===== */
+
+      .wheel-wrapper {
+        width: min(85vw, 320px) !important;
+        height: min(85vw, 320px) !important;
+      }
+
+      #wheelCanvas {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+      }
+
+      @media (max-width: 480px) {
+        .spin-btn {
+          width: 100% !important;
+          max-width: 280px;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .wheel-wrapper {
+          width: 220px !important;
+          height: 220px !important;
+        }
+      }
+
+      @media (max-height: 500px) and (orientation: landscape) {
+        body {
+          justify-content: flex-start;
+        }
+
+        .wheel-wrapper {
+          width: 180px !important;
+          height: 180px !important;
+        }
+      }
+
+      body {
+        overflow-x: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>🎁 ঈদ সালামি চাই?</h1>
+      <p class="subtitle">১ থেকে ১০ টাকার মধ্যে ভাগ্য পরীক্ষা করুন!</p>
+
+      <div class="wheel-wrapper">
+        <div class="pointer-container">
+          <div class="pointer"></div>
+        </div>
+
+        <div class="wheel" id="wheel">
+          <canvas id="wheelCanvas" width="300" height="300"></canvas>
+        </div>
+
+        <div class="center-circle">৳</div>
+      </div>
+
+      <button id="spinBtn" class="spin-btn">🎡 স্পিন করুন</button>
+
+      <div id="resultCard" class="result-card">
+        <div id="resultContent">👉 কত টাকা পাবেন?</div>
+      </div>
+
+      <p class="note">
+        ⚠️ নোট: এটি শুধুমাত্র মজার খেলা। আসল টাকা পেতে চাইলে অ্যাডমিনের সাথে
+        দেখা করুন! 😂
+      </p>
+    </div>
+
+    <!-- ONLY JS PART UPDATED — everything else SAME -->
+
+    <script>
+      const segments = [
+        { value: 1, label: "১" },
+        { value: 2, label: "২" },
+        { value: 3, label: "৩" },
+        { value: 4, label: "৪" },
+        { value: 5, label: "৫" },
+        { value: 6, label: "৬" },
+        { value: 7, label: "৭" },
+        { value: 8, label: "৮" },
+        { value: 9, label: "৯" },
+        { value: 10, label: "১০" },
+      ];
+
+      const colors = [
+        "#ff7675",
+        "#fdcb6e",
+        "#00b894",
+        "#74b9ff",
+        "#a29bfe",
+        "#fab1a0",
+        "#81ecec",
+        "#fd79a8",
+        "#55efc4",
+        "#e17055",
+      ];
+
+      const canvas = document.getElementById("wheelCanvas");
+      const ctx = canvas.getContext("2d");
+      const spinBtn = document.getElementById("spinBtn");
+      const wheelDiv = document.getElementById("wheel");
+      const resultCard = document.getElementById("resultCard");
+      const resultContent = document.getElementById("resultContent");
+
+      let spinning = false;
+
+      // ✅ Check if already played
+      let hasPlayed = localStorage.getItem("eid_salami_played");
+
+      if (hasPlayed) {
+        disableGame();
+      }
+
+      function drawWheel() {
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = Math.min(centerX, centerY);
+        const arcSize = (2 * Math.PI) / segments.length;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        segments.forEach((seg, i) => {
+          ctx.beginPath();
+          ctx.moveTo(centerX, centerY);
+          ctx.arc(
+            centerX,
+            centerY,
+            radius,
+            i * arcSize - Math.PI / 2,
+            (i + 1) * arcSize - Math.PI / 2,
+          );
+          ctx.closePath();
+          ctx.fillStyle = colors[i];
+          ctx.fill();
+          ctx.strokeStyle = "#fff";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.save();
+          ctx.translate(centerX, centerY);
+          ctx.rotate(i * arcSize + arcSize / 2 - Math.PI / 2);
+          ctx.textAlign = "right";
+          ctx.fillStyle = "#fff";
+          ctx.font = "bold 22px Hind Siliguri";
+          ctx.fillText(seg.label, radius - 20, 6);
+          ctx.restore();
+        });
+      }
+
+      function spinWheel() {
+        // 🚫 HARD BLOCK if already played
+        if (spinning || localStorage.getItem("eid_salami_played")) return;
+
+        spinning = true;
+        spinBtn.disabled = true;
+
+        resultCard.classList.remove("show");
+        resultContent.innerHTML = "🎰 দেখছি... কত টাকা?";
+
+        const randomIndex = Math.floor(Math.random() * segments.length);
+        const winner = segments[randomIndex];
+
+        const sliceAngle = 360 / segments.length;
+        const targetAngle = 360 - (randomIndex * sliceAngle + sliceAngle / 2);
+        const totalRotation = 360 * 8 + targetAngle;
+
+        wheelDiv.style.transform = `rotate(${totalRotation}deg)`;
+
+        setTimeout(() => {
+          showResult(winner);
+          spinning = false;
+        }, 5000);
+      }
+
+      function showResult(winner) {
+        // ✅ SAVE RESULT (important)
+        localStorage.setItem("eid_salami_played", "true");
+        localStorage.setItem("eid_salami_result", winner.value);
+
+        resultContent.innerHTML = `
+      <div class="result-label">🎉 অভিনন্দন! আপনি পেয়েছেন</div>
+      <div class="result-amount">৳ ${winner.value}</div>
+    `;
+
+        resultCard.classList.add("show");
+      }
+
+      function disableGame() {
+        spinBtn.disabled = true;
+        spinBtn.innerText = "✅ সুযোগ শেষ";
+
+        const savedResult = localStorage.getItem("eid_salami_result");
+
+        resultCard.classList.add("show");
+        resultContent.innerHTML = savedResult
+          ? `
+      <div class="result-label">আপনি ইতিমধ্যে পেয়েছেন</div>
+      <div class="result-amount">৳ ${savedResult}</div>
+      `
+          : `
+      <div class="result-label">আপনি ইতিমধ্যে স্পিন করেছেন!</div>
+      <div class="result-amount" style="font-size:1.5rem;color:#636e72;">
+        আগামী ঈদে আবার আসুন 👋
+      </div>
+      `;
+      }
+
+      drawWheel();
+      spinBtn.addEventListener("click", spinWheel);
+    </script>
+  </body>
+</html>
