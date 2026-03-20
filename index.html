@@ -380,7 +380,7 @@
       function showResult(winner) {
         // ✅ SAVE RESULT (important)
         localStorage.setItem("eid_salami_played", "true");
-        localStorage.setItem("eid_salami_result", winner.value);
+        localStorage.setItem("eid_salami_result", winner.label);
 
         resultContent.innerHTML = `
       <div class="result-label">🎉 অভিনন্দন! আপনি পেয়েছেন</div>
