@@ -14,8 +14,6 @@
     />
 
     <style>
-      /* ===== YOUR ORIGINAL CSS (UNCHANGED) ===== */
-
       :root {
         --primary: #00b894;
         --secondary: #0984e3;
@@ -38,9 +36,8 @@
         align-items: center;
         justify-content: center;
         background: linear-gradient(135deg, #232526 0%, #414345 100%);
-        overflow: hidden;
+        overflow-x: hidden;
         padding: 20px;
-        position: relative;
       }
 
       .container {
@@ -51,7 +48,7 @@
       }
 
       h1 {
-        font-size: 2.2rem;
+        font-size: clamp(1.5rem, 5vw, 2.2rem);
         color: #fff;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         margin-bottom: 10px;
@@ -60,15 +57,15 @@
 
       .subtitle {
         color: #b2bec3;
-        font-size: 1rem;
+        font-size: clamp(0.9rem, 3vw, 1rem);
         margin-bottom: 30px;
         animation: fadeIn 1.5s ease-out;
       }
 
       .wheel-wrapper {
         position: relative;
-        width: 300px;
-        height: 300px;
+        width: min(85vw, 320px);
+        height: min(85vw, 320px);
         margin: 0 auto 30px;
         filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.4));
       }
@@ -86,6 +83,7 @@
       #wheelCanvas {
         width: 100%;
         height: 100%;
+        display: block;
       }
 
       .pointer-container {
@@ -102,7 +100,6 @@
         border-left: 15px solid transparent;
         border-right: 15px solid transparent;
         border-top: 30px solid #d63031;
-        position: relative;
         filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.3));
       }
 
@@ -120,7 +117,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
+        font-size: clamp(16px, 4vw, 20px);
         color: var(--dark);
       }
 
@@ -128,7 +125,7 @@
         background: linear-gradient(45deg, #ff7675, #d63031);
         border: none;
         padding: 12px 40px;
-        font-size: 1.3rem;
+        font-size: clamp(1rem, 4vw, 1.3rem);
         font-weight: 700;
         font-family: "Hind Siliguri", sans-serif;
         color: white;
@@ -137,6 +134,7 @@
         box-shadow: 0 6px 20px rgba(214, 48, 49, 0.4);
         transition: all 0.3s ease;
         outline: none;
+        width: min(80%, 280px);
       }
 
       .spin-btn:hover:not(:disabled) {
@@ -177,7 +175,7 @@
       }
 
       .result-amount {
-        font-size: 2.8rem;
+        font-size: clamp(1.8rem, 6vw, 2.8rem);
         font-weight: 700;
         color: #00b894;
         line-height: 1;
@@ -185,44 +183,17 @@
       }
 
       .result-label {
-        font-size: 1rem;
+        font-size: clamp(0.9rem, 3vw, 1rem);
         color: #636e72;
       }
 
       .note {
         margin-top: 30px;
         color: rgba(255, 255, 255, 0.5);
-        font-size: 0.8rem;
+        font-size: clamp(0.7rem, 2.5vw, 0.8rem);
         max-width: 350px;
         margin-left: auto;
         margin-right: auto;
-      }
-
-      /* ===== ONLY RESPONSIVE ADDITION (SAFE OVERRIDE) ===== */
-
-      .wheel-wrapper {
-        width: min(85vw, 320px) !important;
-        height: min(85vw, 320px) !important;
-      }
-
-      #wheelCanvas {
-        width: 100% !important;
-        height: 100% !important;
-        display: block;
-      }
-
-      @media (max-width: 480px) {
-        .spin-btn {
-          width: 100% !important;
-          max-width: 280px;
-        }
-      }
-
-      @media (max-width: 360px) {
-        .wheel-wrapper {
-          width: 220px !important;
-          height: 220px !important;
-        }
       }
 
       @media (max-height: 500px) and (orientation: landscape) {
@@ -231,18 +202,17 @@
         }
 
         .wheel-wrapper {
-          width: 180px !important;
-          height: 180px !important;
+          width: 180px;
+          height: 180px;
         }
-      }
-
-      body {
-        overflow-x: hidden;
       }
     </style>
   </head>
 
   <body>
+    <!-- Spin Sound -->
+    <audio id="spinSound" src="/icon/Lucky wheel spin sound effect.mp3" preload="auto"></audio>
+
     <div class="container">
       <h1>🎁 ঈদ সালামি চাই?</h1>
       <p class="subtitle">🎉 ঘুরাও চাকা, জিতে নাও সালামি!</p>
@@ -266,12 +236,18 @@
       </div>
 
       <p class="note">
-        ⚠️ নোট: এটি শুধুমাত্র মজার খেলা। আসল টাকা পেতে চাইলে অ্যাডমিনের সাথে
-        দেখা করুন! 😂
+        ⚠️ নোট: ভাগ্যে জিতলেও টাকা পাওয়া গ্যারান্টি না 😂 অ্যাডমিনের মুড ভালো
+        থাকলে পেতে পারেন... না হলে আল্লাহ ভরসা 😭
       </p>
     </div>
 
-    <!-- ONLY JS PART UPDATED — everything else SAME -->
+    <button
+      onclick="resetGame()"
+      class="spin-btn"
+      style="margin-top: 10px; background: #00b894"
+    >
+      🔄 আবার খেলুন
+    </button>
 
     <script>
       const segments = [
@@ -284,20 +260,13 @@
         { value: 700, label: "৭০০ টাকা" },
         { value: 800, label: "৮০০ টাকা" },
         { value: 900, label: "৯০০ টাকা" },
-        { value: 1000, label: "১০০০ টাকা" },
+        { value: 999, label: "১০০০ টাকা" },
       ];
 
       const colors = [
-        "#ff7675",
-        "#fdcb6e",
-        "#00b894",
-        "#74b9ff",
-        "#a29bfe",
-        "#fab1a0",
-        "#81ecec",
-        "#fd79a8",
-        "#55efc4",
-        "#e17055",
+        "#ff7675", "#fdcb6e", "#00b995", "#74b9ff",
+        "#a29bfe", "#fab1a0", "#81ecec", "#fd79a8",
+        "#55efc4", "#e17055"
       ];
 
       const canvas = document.getElementById("wheelCanvas");
@@ -306,14 +275,15 @@
       const wheelDiv = document.getElementById("wheel");
       const resultCard = document.getElementById("resultCard");
       const resultContent = document.getElementById("resultContent");
+      const spinSound = document.getElementById("spinSound");
 
       let spinning = false;
-
-      // ✅ Check if already played
       let hasPlayed = localStorage.getItem("eid_salami_played");
+      if (hasPlayed) disableGame();
 
-      if (hasPlayed) {
-        disableGame();
+      // Initialize reset counter
+      if (!localStorage.getItem("eid_salami_reset_count")) {
+        localStorage.setItem("eid_salami_reset_count", "0");
       }
 
       function drawWheel() {
@@ -332,7 +302,7 @@
             centerY,
             radius,
             i * arcSize - Math.PI / 2,
-            (i + 1) * arcSize - Math.PI / 2,
+            (i + 1) * arcSize - Math.PI / 2
           );
           ctx.closePath();
           ctx.fillStyle = colors[i];
@@ -353,18 +323,19 @@
       }
 
       function spinWheel() {
-        // 🚫 HARD BLOCK if already played
         if (spinning || localStorage.getItem("eid_salami_played")) return;
 
         spinning = true;
         spinBtn.disabled = true;
-
         resultCard.classList.remove("show");
         resultContent.innerHTML = "🎰 দেখছি... কত টাকা?";
 
+        // Play spin sound
+        spinSound.currentTime = 0;
+        spinSound.play();
+
         const randomIndex = Math.floor(Math.random() * segments.length);
         const winner = segments[randomIndex];
-
         const sliceAngle = 360 / segments.length;
         const targetAngle = 360 - (randomIndex * sliceAngle + sliceAngle / 2);
         const totalRotation = 360 * 8 + targetAngle;
@@ -378,36 +349,56 @@
       }
 
       function showResult(winner) {
-        // ✅ SAVE RESULT (important)
         localStorage.setItem("eid_salami_played", "true");
         localStorage.setItem("eid_salami_result", winner.label);
 
-        resultContent.innerHTML = `
-      <div class="result-label">🤣 ভাগ্য যা দিছে তাই নাও!</div>
-      <div class="result-amount">৳ ${winner.label}</div>
-    `;
+        let message = "";
+        const value = winner.value;
+        if (value === 100) message = "😅 খুব ছোট সালামি! আশা করি পরেরবার ভাগ্য ভালো হবে!";
+        else if (value >= 200 && value <= 400) message = "👍 ভালো চেষ্টা! কিছুটা সালামি পেলেন!";
+        else if (value >= 500 && value <= 800) message = "🎉 চমৎকার! ভালো আয়!";
+        else if (value >= 900 && value <= 1000) message = "💰 অসাধারণ! ঈদের ভাগ্য আপনার!";
+        else message = "আপনি কিছু পেলেন! 😄";
 
+        resultContent.innerHTML = `
+          <div class="result-label">${message}</div>
+          <div class="result-amount">৳ ${winner.label}</div>
+        `;
         resultCard.classList.add("show");
       }
 
       function disableGame() {
         spinBtn.disabled = true;
         spinBtn.innerText = "✅ সুযোগ শেষ";
-
         const savedResult = localStorage.getItem("eid_salami_result");
-
         resultCard.classList.add("show");
         resultContent.innerHTML = savedResult
-          ? `
-      <div class="result-label">আপনি ইতিমধ্যে পেয়েছেন</div>
-      <div class="result-amount">৳ ${savedResult}</div>
-      `
-          : `
-      <div class="result-label">আপনি ইতিমধ্যে স্পিন করেছেন!</div>
-      <div class="result-amount" style="font-size:1.5rem;color:#636e72;">
-        আগামী ঈদে আবার আসুন 👋
-      </div>
-      `;
+          ? `<div class="result-label">আপনি ইতিমধ্যে পেয়েছেন</div>
+             <div class="result-amount">৳ ${savedResult}</div>`
+          : `<div class="result-label">আপনি ইতিমধ্যে স্পিন করেছেন!</div>
+             <div class="result-amount" style="font-size:1.5rem;color:#636e72;">
+             আগামী ঈদে আবার আসুন 👋</div>`;
+      }
+
+      function resetGame() {
+        let resetCount = parseInt(localStorage.getItem("eid_salami_reset_count"), 10);
+
+        if (resetCount >= 2) {
+          alert("🚫 আর রিসেট করা যাবে না! আপনি ২ বার ব্যবহার করেছেন।");
+          return;
+        }
+
+        // Increment reset counter
+        resetCount += 1;
+        localStorage.setItem("eid_salami_reset_count", resetCount.toString());
+
+        // Clear played status
+        localStorage.removeItem("eid_salami_played");
+        localStorage.removeItem("eid_salami_result");
+
+        alert(`♻️ রিসেট সম্পন্ন! আপনি ${resetCount} বার রিসেট করেছেন।`);
+
+        location.reload();
       }
 
       drawWheel();
